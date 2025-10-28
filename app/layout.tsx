@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import { ReactNode } from 'react';
 import Navbar from '@/components/Navbar';
 import '@/assets/styles/globals.css';
+import Footer from '@/components/Footer';
 
 type RootLayoutProps = {
   children: ReactNode;
@@ -22,6 +23,7 @@ const RootLayout = ({ children }: RootLayoutProps) => {
       <body>
         <Navbar />
         <main>{children}</main>
+        <Footer />
       </body>
     </html>
   );
