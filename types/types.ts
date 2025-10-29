@@ -1,6 +1,6 @@
-export interface Property {
+export interface IProperty {
   _id: string;
-  owner: string;
+  owner: IUser;
   name: string;
   type: string;
   description: string;
@@ -26,6 +26,16 @@ export interface Property {
   };
   images: string[];
   is_featured: boolean;
-  createdAt: string; // ISO date string
-  updatedAt: string; // ISO date string
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface IUser {
+  _id: string;
+  email: string;
+  username: string;
+  image?: string;
+  bookmarks: IProperty[];
+  createdAt: string;
+  updatedAt: string;
 }
