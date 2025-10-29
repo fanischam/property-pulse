@@ -1,12 +1,16 @@
 import { Metadata } from 'next';
-import properties from '@/properties.json';
 import PropertyCard from '@/components/PropertyCard';
+import connectDb from '@/config/database';
+import Property from '@/models/Property';
+import { IProperty } from '@/types/types';
 
 export const metadata: Metadata = {
   title: 'Properties',
 };
 
-const PropertiesPage = () => {
+const PropertiesPage = async () => {
+  await connectDb();
+  const properties = await Property.find({}).lean<IProperty[]>();
   return (
     <section className='px-4 py-6'>
       <div className='container-xl lg:container m-auto px-4 py-6'>
