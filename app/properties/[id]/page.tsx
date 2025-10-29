@@ -7,10 +7,24 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { FaArrowLeft } from 'react-icons/fa';
 
-// change page title
-export const metadata: Metadata = {
-  title: 'Property',
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: { id: string };
+}): Promise<Metadata> {
+  const { id } = await params;
+  await connectDb();
+  const property = await Property.findById(id).lean<IProperty | null>();
+
+  if (!property) {
+    return { title: 'Property Not Found' };
+  }
+
+  return {
+    title: `${property.name} | PropertyPulse`,
+    description: property.description.slice(0, 150),
+  };
+}
 
 type PropertyPageProps = {
   params: {
