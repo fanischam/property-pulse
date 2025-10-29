@@ -6,7 +6,7 @@ import {
   FaBed,
   FaMapMarker,
   FaMoneyBill,
-  FaRuler,
+  FaRulerCombined,
 } from 'react-icons/fa';
 
 type PropertyCardProps = {
@@ -50,7 +50,7 @@ const PropertyCard = ({ property }: PropertyCardProps) => {
             <span className='md:hidden lg:inline'>Baths</span>
           </p>
           <p>
-            <FaRuler className='md:hidden lg:inline' />
+            <FaRulerCombined className='md:hidden lg:inline' />
             {` ${property.square_feet} `}
             <span className='md:hidden lg:inline'>sqft</span>
           </p>
