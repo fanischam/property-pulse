@@ -39,3 +39,7 @@ export interface IUser {
   createdAt: string;
   updatedAt: string;
 }
+
+export type RouteParams = {
+  params: Promise<{ id: string }>;
+};

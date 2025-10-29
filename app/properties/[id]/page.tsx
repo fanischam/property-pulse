@@ -2,16 +2,14 @@ import PropertyDetails from '@/components/PropertyDetails';
 import PropertyHeaderImage from '@/components/PropertyHeaderImage';
 import connectDb from '@/config/database';
 import Property from '@/models/Property';
-import { IProperty } from '@/types/types';
+import { IProperty, RouteParams } from '@/types/types';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { FaArrowLeft } from 'react-icons/fa';
 
 export async function generateMetadata({
   params,
-}: {
-  params: { id: string };
-}): Promise<Metadata> {
+}: RouteParams): Promise<Metadata> {
   const { id } = await params;
   await connectDb();
   const property = await Property.findById(id).lean<IProperty | null>();
@@ -26,13 +24,7 @@ export async function generateMetadata({
   };
 }
 
-type PropertyPageProps = {
-  params: {
-    id: string;
-  };
-};
-
-const PropertyPage = async ({ params }: PropertyPageProps) => {
+const PropertyPage = async ({ params }: RouteParams) => {
   const { id } = await params;
   await connectDb();
 
