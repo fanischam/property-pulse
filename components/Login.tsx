@@ -45,7 +45,7 @@ const Login = () => {
       </label>
       <button
         type='submit'
-        className='bg-blue-500 m-2 text-white p-2 rounded-lg'
+        className='bg-blue-500 m-4 text-white p-2 rounded-lg'
       >
         Login
       </button>
