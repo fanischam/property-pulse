@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import logo from '@/assets/images/logo-white.png';
 import profileDefault from '@/assets/images/profile.png';
-import { FaGoogle } from 'react-icons/fa';
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -91,10 +90,11 @@ const Navbar = () => {
           {!isLoggedIn && (
             <div className='hidden md:block md:ml-6'>
               <div className='flex items-center'>
-                <button className='flex items-center text-white bg-gray-700 hover:bg-gray-900 hover:text-white rounded-md px-3 py-2'>
-                  <FaGoogle className='text-white mr-2' />
-                  <span>Login or Register</span>
-                </button>
+                <Link href='/login'>
+                  <button className='flex items-center text-white bg-gray-700 hover:bg-gray-900 hover:text-white rounded-md px-3 py-2'>
+                    <span>Login or Register</span>
+                  </button>
+                </Link>
               </div>
             </div>
           )}
@@ -223,7 +223,6 @@ const Navbar = () => {
             )}
             {!isLoggedIn && (
               <button className='flex items-center text-white bg-gray-700 hover:bg-gray-900 hover:text-white rounded-md px-3 py-2 my-5'>
-                <FaGoogle className='text-white mr-2' />
                 <span>Login or Register</span>
               </button>
             )}
