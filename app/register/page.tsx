@@ -1,5 +1,11 @@
 import Register from '@/components/Register';
+import { Metadata } from 'next';
 import Link from 'next/link';
+
+export const metadata: Metadata = {
+  title: 'Register User',
+  description: 'Create a new account',
+};
 
 const RegisterPage = () => {
   return (
