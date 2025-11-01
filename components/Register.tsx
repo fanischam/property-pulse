@@ -1,9 +1,10 @@
 'use client';
 
 import { registerUser } from '@/app/actions/auth';
+import { usePasswordValidation } from '@/app/hooks/usePasswordValidation';
 import { FormState } from '@/app/lib/definitions';
-import { useActionState, useEffect } from 'react';
-import { FaExclamationTriangle } from 'react-icons/fa';
+import { FormEvent, useActionState, useEffect } from 'react';
+import { FaCheckCircle, FaExclamationTriangle } from 'react-icons/fa';
 import { toast, ToastContainer } from 'react-toastify';
 
 const Register = () => {
@@ -11,6 +12,17 @@ const Register = () => {
     registerUser,
     { status: 0, message: '' }
   );
+
+  const {
+    password,
+    confirm,
+    pwdErrors,
+    confirmErrors,
+    isValid,
+    rules,
+    onPasswordChange,
+    onConfirmChange,
+  } = usePasswordValidation();
 
   useEffect(() => {
     if (!state) return;
@@ -24,8 +36,19 @@ const Register = () => {
     }
   }, [state]);
 
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    if (!isValid) {
+      e.preventDefault();
+      toast.error('Please fix password errors before submitting.');
+    }
+  };
+
   return (
-    <form action={action} className='flex flex-col'>
+    <form
+      action={action}
+      onSubmit={handleSubmit}
+      className='flex flex-col w-84'
+    >
       <label className='text-gray-800 p-2 rounded-lg mb-4 block'>
         Name:
         <div className='relative'>
@@ -79,12 +102,39 @@ const Register = () => {
             }`}
             type='password'
             name='password'
+            value={password}
+            onChange={(e) => onPasswordChange(e.target.value)}
+            aria-invalid={pwdErrors.length > 0}
+            aria-describedby='password-help'
+            autoComplete='new-password'
           />
-          {state?.errors?.password && (
-            <FaExclamationTriangle
-              className='absolute right-3 top-1/2 -translate-y-1/2 text-red-500'
-              size={16}
-            />
+          <ul id='password-help' className='mt-2 text-sm space-y-1'>
+            <li className={rules.length ? 'text-green-600' : 'text-gray-600'}>
+              {rules.length ? <FaCheckCircle className='inline mr-1' /> : '•'}{' '}
+              At least 8 characters
+            </li>
+            <li className={rules.letter ? 'text-green-600' : 'text-gray-600'}>
+              {rules.letter ? <FaCheckCircle className='inline mr-1' /> : '•'}{' '}
+              Contains a letter
+            </li>
+            <li className={rules.digit ? 'text-green-600' : 'text-gray-600'}>
+              {rules.digit ? <FaCheckCircle className='inline mr-1' /> : '•'}{' '}
+              Contains a digit
+            </li>
+            <li className={rules.special ? 'text-green-600' : 'text-gray-600'}>
+              {rules.special ? <FaCheckCircle className='inline mr-1' /> : '•'}{' '}
+              Contains a special character
+            </li>
+          </ul>
+
+          {pwdErrors.length > 0 && (
+            <ul className='mt-2 space-y-0.5'>
+              {pwdErrors.map((m, i) => (
+                <li key={i} className='text-sm text-red-600'>
+                  {m}
+                </li>
+              ))}
+            </ul>
           )}
         </div>
         {state?.errors?.password && (
@@ -104,26 +154,34 @@ const Register = () => {
             }`}
             type='password'
             name='confirmPassword'
+            value={confirm}
+            onChange={(e) => onConfirmChange(e.target.value)}
+            aria-invalid={confirmErrors.length > 0}
+            autoComplete='new-password'
           />
-          {state?.errors?.confirmPassword && (
+          {confirmErrors.length > 0 && (
             <FaExclamationTriangle
               className='absolute right-3 top-1/2 -translate-y-1/2 text-red-500'
-              size={16}
+              size={18}
             />
           )}
         </div>
-        {state?.errors?.confirmPassword && (
-          <p className='text-red-500 text-sm mt-1'>
-            {state.errors.confirmPassword[0]}
+        {confirm.length > 0 && (
+          <p
+            className={`text-sm mt-2 ${
+              rules.match ? 'text-green-600' : 'text-red-600'
+            }`}
+          >
+            {rules.match ? 'Passwords match' : 'Passwords do not match'}
           </p>
         )}
       </label>
       <button
-        className='bg-blue-500 m-4 text-white p-2 rounded-lg cursor-pointer disabled:opacity-50'
-        disabled={pending}
+        className='bg-blue-500 text-white p-3 rounded-lg cursor-pointer disabled:opacity-50 self-start md:self-auto'
+        disabled={pending || !isValid}
         type='submit'
       >
-        Register
+        {pending ? 'Registering user...' : 'Register'}
       </button>
       <ToastContainer position='top-right' />
     </form>
