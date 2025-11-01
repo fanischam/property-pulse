@@ -20,6 +20,21 @@ export const SignUpFormSchema = z
     path: ['confirmPassword'],
   });
 
+export const PasswordSchema = z
+  .object({
+    password: z
+      .string()
+      .min(8, 'At least 8 characters')
+      .regex(/[a-zA-Z]/, 'Must contain a letter')
+      .regex(/[0-9]/, 'Must contain a digit')
+      .regex(/[^A-Za-z0-9]/, 'Must contain a special character'),
+    confirmPassword: z.string(),
+  })
+  .refine((d) => d.password === d.confirmPassword, {
+    message: "Passwords don't match",
+    path: ['confirmPassword'],
+  });
+
 export type FormErrors = {
   name?: string[];
   email?: string[];
