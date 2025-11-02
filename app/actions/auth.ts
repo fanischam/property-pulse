@@ -61,10 +61,12 @@ export const registerUser = async (
       };
     }
 
+    const hashedPassword = await bcrypt.hash(passwordValue, 10);
+
     await User.create({
       username,
       email: emailValue,
-      password: passwordValue,
+      password: hashedPassword,
     });
 
     return { status: 201, message: 'User created successfully!' };
