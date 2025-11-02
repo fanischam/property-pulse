@@ -4,6 +4,7 @@ import User from '@/models/User';
 import { FormState, SignUpFormSchema } from '../lib/definitions';
 import connectDb from '@/config/database';
 import { z } from 'zod';
+import bcrypt from 'bcryptjs';
 
 export const registerUser = async (
   _prevState: FormState,
