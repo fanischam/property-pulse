@@ -7,7 +7,8 @@ export const SignUpFormSchema = z
     password: z
       .string()
       .min(8, 'Length should be at least 8 characters long')
-      .regex(/[a-zA-Z]/, 'Contain at least one letter')
+      .regex(/[a-z]/, 'Contain at least one lowercase letter')
+      .regex(/[A-Z]/, 'Contain at least one uppercase letter')
       .regex(/[0-9]/, 'Contain at least one digit')
       .regex(
         /[^A-Za-z0-9]/,
@@ -25,7 +26,8 @@ export const PasswordSchema = z
     password: z
       .string()
       .min(8, 'At least 8 characters')
-      .regex(/[a-zA-Z]/, 'Must contain a letter')
+      .regex(/[a-z]/, 'Must contain at least one lowercase letter')
+      .regex(/[A-Z]/, 'Must contain at least one uppercase letter')
       .regex(/[0-9]/, 'Must contain a digit')
       .regex(/[^A-Za-z0-9]/, 'Must contain a special character'),
     confirmPassword: z.string(),

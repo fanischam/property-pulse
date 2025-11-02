@@ -3,7 +3,8 @@ import { PasswordSchema } from '../lib/definitions';
 
 export type PasswordRules = {
   length: boolean;
-  letter: boolean;
+  lowercaseLetter: boolean;
+  uppercaseLetter: boolean;
   digit: boolean;
   special: boolean;
   match: boolean;
@@ -51,7 +52,8 @@ export function usePasswordValidation() {
   const rules: PasswordRules = useMemo(
     () => ({
       length: password.length >= 8,
-      letter: /[a-zA-Z]/.test(password),
+      uppercaseLetter: /[A-Z]/.test(password),
+      lowercaseLetter: /[a-z]/.test(password),
       digit: /[0-9]/.test(password),
       special: /[^A-Za-z0-9]/.test(password),
       match: confirm.length > 0 && password === confirm,
