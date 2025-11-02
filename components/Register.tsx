@@ -48,7 +48,7 @@ const Register = () => {
     <form
       action={action}
       onSubmit={handleSubmit}
-      className='flex flex-col w-84'
+      className='flex flex-col w-smart md:w-auto bg-white p-6 rounded-lg shadow-md'
     >
       <label className='text-gray-800 p-2 rounded-lg mb-4 block'>
         Name:

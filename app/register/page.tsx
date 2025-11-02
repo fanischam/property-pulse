@@ -12,7 +12,7 @@ const RegisterPage = () => {
     <div className='flex flex-col items-center bg-gray-100 pb-14'>
       <h1 className='text-2xl text-gray-800 mt-24 mb-4 p-4'>Register</h1>
       <Register />
-      <span>
+      <span className='mt-2'>
         Already have an account?{' '}
         <Link href='/login' className='text-blue-500'>
           Login
