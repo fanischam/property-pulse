@@ -5,6 +5,7 @@ import { usePasswordValidation } from '@/app/hooks/usePasswordValidation';
 import { FormState } from '@/app/lib/definitions';
 import { FormEvent, useActionState, useEffect } from 'react';
 import { FaCheckCircle, FaExclamationTriangle } from 'react-icons/fa';
+import { FaXmark } from 'react-icons/fa6';
 import { toast, ToastContainer } from 'react-toastify';
 
 const Register = () => {
@@ -108,34 +109,56 @@ const Register = () => {
             aria-describedby='password-help'
             autoComplete='new-password'
           />
-          <ul id='password-help' className='mt-2 text-sm space-y-1'>
-            <li className={rules.length ? 'text-green-600' : 'text-gray-600'}>
-              {rules.length ? <FaCheckCircle className='inline mr-1' /> : '•'}{' '}
+          <ul id='password-help' className='mt-2 text-sm space-y-1 list-none'>
+            <li className={rules.length ? 'text-green-600' : 'text-red-600'}>
+              {rules.length ? (
+                <FaCheckCircle className='inline mr-1' />
+              ) : (
+                <FaXmark className='inline mr-1' />
+              )}{' '}
               At least 8 characters
             </li>
-            <li className={rules.letter ? 'text-green-600' : 'text-gray-600'}>
-              {rules.letter ? <FaCheckCircle className='inline mr-1' /> : '•'}{' '}
-              Contains a letter
+            <li
+              className={
+                rules.lowercaseLetter ? 'text-green-600' : 'text-red-600'
+              }
+            >
+              {rules.lowercaseLetter ? (
+                <FaCheckCircle className='inline mr-1' />
+              ) : (
+                <FaXmark className='inline mr-1' />
+              )}{' '}
+              Contains a lowercase character
             </li>
-            <li className={rules.digit ? 'text-green-600' : 'text-gray-600'}>
-              {rules.digit ? <FaCheckCircle className='inline mr-1' /> : '•'}{' '}
+            <li
+              className={
+                rules.uppercaseLetter ? 'text-green-600' : 'text-red-600'
+              }
+            >
+              {rules.uppercaseLetter ? (
+                <FaCheckCircle className='inline mr-1' />
+              ) : (
+                <FaXmark className='inline mr-1' />
+              )}{' '}
+              Contains an uppercase character
+            </li>
+            <li className={rules.digit ? 'text-green-600' : 'text-red-600'}>
+              {rules.digit ? (
+                <FaCheckCircle className='inline mr-1' />
+              ) : (
+                <FaXmark className='inline mr-1' />
+              )}{' '}
               Contains a digit
             </li>
-            <li className={rules.special ? 'text-green-600' : 'text-gray-600'}>
-              {rules.special ? <FaCheckCircle className='inline mr-1' /> : '•'}{' '}
+            <li className={rules.special ? 'text-green-600' : 'text-red-600'}>
+              {rules.special ? (
+                <FaCheckCircle className='inline mr-1' />
+              ) : (
+                <FaXmark className='inline mr-1' />
+              )}{' '}
               Contains a special character
             </li>
           </ul>
-
-          {pwdErrors.length > 0 && (
-            <ul className='mt-2 space-y-0.5'>
-              {pwdErrors.map((m, i) => (
-                <li key={i} className='text-sm text-red-600'>
-                  {m}
-                </li>
-              ))}
-            </ul>
-          )}
         </div>
         {state?.errors?.password && (
           <p className='text-red-500 text-sm mt-1'>
