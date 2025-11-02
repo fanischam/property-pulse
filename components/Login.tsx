@@ -1,32 +1,23 @@
 'use client';
-import { useRouter } from 'next/navigation';
+import { toast, ToastContainer } from 'react-toastify';
 
 const Login = () => {
-  const router = useRouter();
-
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
     const formData = new FormData(e.currentTarget as HTMLFormElement);
     const email = formData.get('email');
     const password = formData.get('password');
 
-    const response = await fetch('/api/auth/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email, password }),
-    });
-
-    if (response.ok) {
-      router.push('/');
-    } else {
-      alert('Login failed');
+    if (!email || !password) {
+      e.preventDefault();
+      toast.error('Please fill in all fields.');
     }
   };
+
   return (
-    <form onSubmit={handleSubmit} className='flex flex-col'>
+    <form
+      onSubmit={handleSubmit}
+      className='flex flex-col w-smart md:w-auto bg-white p-6 rounded-lg shadow-md'
+    >
       <label className='text-gray-800 p-2 rounded-lg mb-4'>
         Email:
         <input
@@ -49,6 +40,7 @@ const Login = () => {
       >
         Login
       </button>
+      <ToastContainer position='top-right' />
     </form>
   );
 };
