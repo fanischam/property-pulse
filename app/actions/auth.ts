@@ -80,3 +80,40 @@ export const registerUser = async (
     };
   }
 };
+
+export const loginUser = async (formData: FormData) => {
+  await connectDb();
+
+  const email = String(formData.get('email') ?? '');
+  const password = String(formData.get('password') ?? '');
+
+  try {
+    const user = await User.findOne({ email }).select('+password');
+
+    if (!user || !user.password) {
+      return {
+        status: 401,
+        message: 'Invalid email or password.',
+        fields: { email },
+      };
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return {
+        status: 401,
+        message: 'Invalid email or password.',
+        fields: { email },
+      };
+    }
+
+    return { status: 200, message: 'Login successful!' };
+  } catch (err) {
+    console.error('Login failed:', err);
+    return {
+      status: 500,
+      message: 'Login failed. Please try again later.',
+      fields: { email },
+    };
+  }
+};
