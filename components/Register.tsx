@@ -2,14 +2,14 @@
 
 import { registerUser } from '@/app/actions/auth';
 import { usePasswordValidation } from '@/app/hooks/usePasswordValidation';
-import { FormState } from '@/app/lib/definitions';
+import { RegisterFormState } from '@/app/lib/definitions';
 import { FormEvent, useActionState, useEffect } from 'react';
 import { FaCheckCircle, FaExclamationTriangle } from 'react-icons/fa';
 import { FaXmark } from 'react-icons/fa6';
 import { toast, ToastContainer } from 'react-toastify';
 
 const Register = () => {
-  const [state, action, pending] = useActionState<FormState, FormData>(
+  const [state, action, pending] = useActionState<RegisterFormState, FormData>(
     registerUser,
     { status: 0, message: '' }
   );
@@ -50,7 +50,7 @@ const Register = () => {
       onSubmit={handleSubmit}
       className='flex flex-col w-smart md:w-auto bg-white p-6 rounded-lg shadow-md'
     >
-      <label className='text-gray-800 p-2 rounded-lg mb-4 block'>
+      <label className='text-gray-800 p-2 rounded-lg mb-4'>
         Name:
         <div className='relative'>
           <input
@@ -109,14 +109,17 @@ const Register = () => {
             aria-describedby='password-help'
             autoComplete='new-password'
           />
-          <ul id='password-help' className='mt-2 text-sm space-y-1 list-none'>
+          <ul
+            id='password-help'
+            className='mt-2 text-sm space-y-1 list-none opacity-60'
+          >
             <li className={rules.length ? 'text-green-600' : 'text-red-600'}>
               {rules.length ? (
                 <FaCheckCircle className='inline mr-1' />
               ) : (
                 <FaXmark className='inline mr-1' />
               )}{' '}
-              At least 8 characters
+              Contains at least 8 characters
             </li>
             <li
               className={
@@ -200,7 +203,7 @@ const Register = () => {
         )}
       </label>
       <button
-        className='bg-blue-500 text-white p-3 rounded-lg cursor-pointer disabled:opacity-50 self-start md:self-auto'
+        className='bg-blue-500 m-4 text-white p-2 rounded-lg cursor-pointer disabled:opacity-50 self-start md:self-auto'
         disabled={pending || !isValid}
         type='submit'
       >
