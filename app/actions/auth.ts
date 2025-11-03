@@ -1,15 +1,20 @@
 'use server';
 
 import User from '@/models/User';
-import { FormState, SignUpFormSchema } from '../lib/definitions';
+import {
+  LoginFormSchema,
+  LoginFormState,
+  RegisterFormState,
+  SignUpFormSchema,
+} from '../lib/definitions';
 import connectDb from '@/config/database';
 import { z } from 'zod';
 import bcrypt from 'bcryptjs';
 
 export const registerUser = async (
-  _prevState: FormState,
+  _prevState: RegisterFormState,
   formData: FormData
-): Promise<FormState> => {
+): Promise<RegisterFormState> => {
   await connectDb();
 
   const name = String(formData.get('name') ?? '');
@@ -48,7 +53,7 @@ export const registerUser = async (
     });
 
     if (existingUser) {
-      const errors: FormState['errors'] = {};
+      const errors: RegisterFormState['errors'] = {};
       if (existingUser.email === emailValue)
         errors.email = ['Email is already in use'];
       if (existingUser.username === username)
@@ -81,24 +86,44 @@ export const registerUser = async (
   }
 };
 
-export const loginUser = async (formData: FormData) => {
+export const loginUser = async (
+  _prevState: LoginFormState,
+  formData: FormData
+) => {
   await connectDb();
 
   const email = String(formData.get('email') ?? '');
   const password = String(formData.get('password') ?? '');
 
+  const parsed = LoginFormSchema.safeParse({
+    email,
+    password,
+  });
+
+  if (!parsed.success) {
+    const { fieldErrors, formErrors } = z.flattenError(parsed.error);
+    return {
+      status: 400,
+      message: formErrors[0] ?? 'Login failed.',
+      errors: fieldErrors,
+      fields: { email },
+    };
+  }
+
   try {
     const user = await User.findOne({ email }).select('+password');
 
     if (!user || !user.password) {
+      console.log('!user || !user.password');
       return {
         status: 401,
         message: 'Invalid email or password.',
         fields: { email },
       };
     }
-
+    console.log(`Passwords: ${password}, ${user.password}`);
     const isPasswordValid = await bcrypt.compare(password, user.password);
+    console.log(`isPasswordValid: ${isPasswordValid}`);
     if (!isPasswordValid) {
       return {
         status: 401,
@@ -107,7 +132,7 @@ export const loginUser = async (formData: FormData) => {
       };
     }
 
-    return { status: 200, message: 'Login successful!' };
+    return { status: 200, message: 'Logged in successful!' };
   } catch (err) {
     console.error('Login failed:', err);
     return {
