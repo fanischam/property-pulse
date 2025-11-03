@@ -1,7 +1,7 @@
 'use client';
 
 import { registerUser } from '@/app/actions/auth';
-import { usePasswordValidation } from '@/app/hooks/usePasswordValidation';
+import { useRegisterValidation } from '@/app/hooks/useRegisterValidation';
 import { RegisterFormState } from '@/app/lib/definitions';
 import { FormEvent, useActionState, useEffect } from 'react';
 import { FaCheckCircle, FaExclamationTriangle } from 'react-icons/fa';
@@ -23,7 +23,7 @@ const Register = () => {
     rules,
     onPasswordChange,
     onConfirmChange,
-  } = usePasswordValidation();
+  } = useRegisterValidation();
 
   useEffect(() => {
     if (!state) return;

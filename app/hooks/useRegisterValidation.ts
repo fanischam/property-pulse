@@ -10,7 +10,7 @@ export type PasswordRules = {
   match: boolean;
 };
 
-export function usePasswordValidation() {
+export function useRegisterValidation() {
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
   const [pwdErrors, setPwdErrors] = useState<string[]>([]);
@@ -23,13 +23,16 @@ export function usePasswordValidation() {
       setConfirmErrors([]);
       return true;
     }
-    const byField: Record<string, string[]> = {};
+
+    const errorsMap: Record<string, string[]> = {};
+
     for (const issue of res.error.issues) {
       const key = issue.path.join('.') || 'form';
-      (byField[key] ??= []).push(issue.message);
+      (errorsMap[key] ??= []).push(issue.message);
     }
-    setPwdErrors(byField.password ?? []);
-    setConfirmErrors(byField.confirmPassword ?? []);
+
+    setPwdErrors(errorsMap.password ?? []);
+    setConfirmErrors(errorsMap.confirmPassword ?? []);
     return false;
   };
 
