@@ -1,7 +1,28 @@
 'use client';
+import { loginUser } from '@/app/actions/auth';
+import { LoginFormState } from '@/app/lib/definitions';
+import { useActionState, useEffect } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 
 const Login = () => {
+  const [state, action, pending] = useActionState<LoginFormState, FormData>(
+    loginUser,
+    { status: 0, message: '' }
+  );
+
+  useEffect(() => {
+    if (!state) return;
+
+    if (state.status === 200 && state.message) {
+      toast.success(state.message);
+      return;
+    }
+    const msg = state.message;
+    if (msg && state.status && state.status !== 200) {
+      toast.error(msg);
+    }
+  }, [state]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     const formData = new FormData(e.currentTarget as HTMLFormElement);
     const email = formData.get('email');
@@ -15,6 +36,7 @@ const Login = () => {
 
   return (
     <form
+      action={action}
       onSubmit={handleSubmit}
       className='flex flex-col w-smart md:w-auto bg-white p-6 rounded-lg shadow-md'
     >
@@ -36,7 +58,7 @@ const Login = () => {
       </label>
       <button
         type='submit'
-        className='bg-blue-500 m-4 text-white p-2 rounded-lg'
+        className='bg-blue-500 m-4 text-white p-2 rounded-lg cursor-pointer disabled:opacity-50 self-start md:self-auto'
       >
         Login
       </button>
