@@ -37,19 +37,35 @@ export const PasswordSchema = z
     path: ['confirmPassword'],
   });
 
-export type FormErrors = {
+export const LoginFormSchema = z.object({
+  email: z.string().min(1, 'Email is required').email('Invalid email address'),
+  password: z.string().min(1, 'Password is required'),
+});
+
+type RegisterFormErrors = {
   name?: string[];
   email?: string[];
   password?: string[];
   confirmPassword?: string[];
 };
 
-export type FormState = {
+type LoginFormErrors = {
+  email?: string[];
+  password?: string[];
+};
+
+export type RegisterFormState = {
   status: number;
   message: string;
-  errors?: FormErrors;
+  errors?: RegisterFormErrors;
   fields?: {
     name?: string;
     email?: string;
   };
+};
+
+export type LoginFormState = {
+  status: number;
+  message: string;
+  errors?: LoginFormErrors;
 };
