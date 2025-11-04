@@ -113,26 +113,29 @@ export const loginUser = async (
   try {
     const user = await User.findOne({ email }).select('+password');
 
-    if (!user || !user.password) {
-      console.log('!user || !user.password');
+    if (!user) {
+      const errors: LoginFormState['errors'] = {};
+      if (!user) errors.email = ['User not found'];
+
       return {
         status: 401,
-        message: 'Invalid email or password.',
-        fields: { email },
-      };
-    }
-    console.log(`Passwords: ${password}, ${user.password}`);
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    console.log(`isPasswordValid: ${isPasswordValid}`);
-    if (!isPasswordValid) {
-      return {
-        status: 401,
+        errors,
         message: 'Invalid email or password.',
         fields: { email },
       };
     }
 
-    return { status: 200, message: 'Logged in successful!' };
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return {
+        status: 401,
+        errors: { password: ['Incorrect password'] },
+        message: 'Invalid email or password.',
+        fields: { email },
+      };
+    }
+
+    return { status: 200, message: 'Logged in successfully!' };
   } catch (err) {
     console.error('Login failed:', err);
     return {
