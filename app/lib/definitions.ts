@@ -1,4 +1,5 @@
 import * as z from 'zod';
+import { User } from './auth/auth-types';
 
 export const SignUpFormSchema = z
   .object({
@@ -58,14 +59,14 @@ export type RegisterFormState = {
   status: number;
   message: string;
   errors?: RegisterFormErrors;
-  fields?: {
-    name?: string;
-    email?: string;
-  };
+  fields?: { name?: string; email?: string };
+  user?: User;
 };
 
 export type LoginFormState = {
   status: number;
   message: string;
   errors?: LoginFormErrors;
+  fields?: { email?: string };
+  user?: User;
 };
