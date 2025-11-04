@@ -1,5 +1,6 @@
 'use client';
 import { loginUser } from '@/app/actions/auth';
+import { useLoginValidation } from '@/app/hooks/useLoginValidation';
 import { LoginFormState } from '@/app/lib/definitions';
 import { useActionState, useEffect } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
@@ -9,6 +10,9 @@ const Login = () => {
     loginUser,
     { status: 0, message: '' }
   );
+
+  const { email, password, isValid, onEmailChange, onPasswordChange } =
+    useLoginValidation();
 
   useEffect(() => {
     if (!state) return;
@@ -45,22 +49,39 @@ const Login = () => {
         <input
           type='email'
           name='email'
-          className='border border-gray-300 p-2 rounded-lg w-full'
+          value={email}
+          onChange={(e) => onEmailChange(e.target.value)}
+          className={`border border-gray-300 p-2 rounded-lg w-full ${
+            state?.errors?.email ? 'border-red-500' : 'border-gray-300'
+          }`}
         />
+        {state?.errors?.email && (
+          <p className='text-red-500 text-sm mt-1'>{state.errors.email[0]}</p>
+        )}
       </label>
       <label className='text-gray-800 p-2 rounded-lg mb-4'>
         Password:
         <input
           type='password'
           name='password'
-          className='border border-gray-300 p-2 rounded-lg w-full'
+          value={password}
+          onChange={(e) => onPasswordChange(e.target.value)}
+          className={`border border-gray-300 p-2 rounded-lg w-full ${
+            state?.errors?.password ? 'border-red-500' : 'border-gray-300'
+          }`}
         />
+        {state?.errors?.password && (
+          <p className='text-red-500 text-sm mt-1'>
+            {state.errors.password[0]}
+          </p>
+        )}
       </label>
       <button
         type='submit'
         className='bg-blue-500 m-4 text-white p-2 rounded-lg cursor-pointer disabled:opacity-50 self-start md:self-auto'
+        disabled={pending || !isValid}
       >
-        Login
+        {pending ? 'Logging in...' : 'Login'}
       </button>
       <ToastContainer position='top-right' />
     </form>

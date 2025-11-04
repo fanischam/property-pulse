@@ -2,7 +2,6 @@
 
 import User from '@/models/User';
 import {
-  LoginFormSchema,
   LoginFormState,
   RegisterFormState,
   SignUpFormSchema,
@@ -94,21 +93,6 @@ export const loginUser = async (
 
   const email = String(formData.get('email') ?? '');
   const password = String(formData.get('password') ?? '');
-
-  const parsed = LoginFormSchema.safeParse({
-    email,
-    password,
-  });
-
-  if (!parsed.success) {
-    const { fieldErrors, formErrors } = z.flattenError(parsed.error);
-    return {
-      status: 400,
-      message: formErrors[0] ?? 'Login failed.',
-      errors: fieldErrors,
-      fields: { email },
-    };
-  }
 
   try {
     const user = await User.findOne({ email }).select('+password');
