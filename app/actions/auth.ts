@@ -1,6 +1,6 @@
 'use server';
 
-import User from '@/models/User';
+import UserModel from '@/models/User';
 import {
   LoginFormState,
   RegisterFormState,
@@ -9,6 +9,34 @@ import {
 import connectDb from '@/config/database';
 import { z } from 'zod';
 import bcrypt from 'bcryptjs';
+import { cookies } from 'next/headers';
+import { type User } from '../lib/auth/auth-types';
+
+const createSessionToken = (userId: string) => {
+  return `session_token_for_${userId}_${Date.now()}`;
+};
+
+const setSessionCookie = async (token: string) => {
+  const cookieStore = await cookies();
+  cookieStore.set('session', token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    path: '/',
+    maxAge: 60 * 60 * 24 * 7, // 1 week
+  });
+};
+
+const clearSessionCookie = async () => {
+  const cookieStore = await cookies();
+  cookieStore.set('session', '', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    path: '/',
+    maxAge: 0,
+  });
+};
 
 export const registerUser = async (
   _prevState: RegisterFormState,
@@ -29,7 +57,6 @@ export const registerUser = async (
   });
 
   if (!parsed.success) {
-    console.log(`Parsed: ${JSON.stringify(parsed)}`);
     const { fieldErrors, formErrors } = z.flattenError(parsed.error);
 
     return {
@@ -47,7 +74,7 @@ export const registerUser = async (
       password: passwordValue,
     } = parsed.data;
 
-    const existingUser = await User.findOne({
+    const existingUser = await UserModel.findOne({
       $or: [{ email: emailValue }, { username }],
     });
 
@@ -68,13 +95,22 @@ export const registerUser = async (
 
     const hashedPassword = await bcrypt.hash(passwordValue, 10);
 
-    await User.create({
+    const createdUser = await UserModel.create({
       username,
       email: emailValue,
       password: hashedPassword,
     });
 
-    return { status: 201, message: 'User created successfully!' };
+    const user: User = {
+      id: createdUser._id.toString(),
+      name: createdUser.username,
+      email: createdUser.email,
+    };
+
+    const token = createSessionToken(user.id);
+    await setSessionCookie(token);
+
+    return { status: 201, message: 'User created successfully!', user };
   } catch (err) {
     console.error('Failed to create user:', err);
     return {
@@ -95,11 +131,10 @@ export const loginUser = async (
   const password = String(formData.get('password') ?? '');
 
   try {
-    const user = await User.findOne({ email }).select('+password');
+    const userRecord = await UserModel.findOne({ email }).select('+password');
 
-    if (!user) {
-      const errors: LoginFormState['errors'] = {};
-      if (!user) errors.email = ['User not found'];
+    if (!userRecord) {
+      const errors: LoginFormState['errors'] = { email: ['User not found'] };
 
       return {
         status: 401,
@@ -109,7 +144,7 @@ export const loginUser = async (
       };
     }
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    const isPasswordValid = await bcrypt.compare(password, userRecord.password);
     if (!isPasswordValid) {
       return {
         status: 401,
@@ -119,7 +154,16 @@ export const loginUser = async (
       };
     }
 
-    return { status: 200, message: 'Logged in successfully!' };
+    const user: User = {
+      id: userRecord._id.toString(),
+      name: userRecord.username,
+      email: userRecord.email,
+    };
+
+    const token = createSessionToken(user.id);
+    await setSessionCookie(token);
+
+    return { status: 200, message: 'Logged in successfully!', user };
   } catch (err) {
     console.error('Login failed:', err);
     return {
@@ -128,4 +172,9 @@ export const loginUser = async (
       fields: { email },
     };
   }
+};
+
+export const logout = async () => {
+  await clearSessionCookie();
+  return { status: 200, message: 'Logged out successfully.' };
 };
