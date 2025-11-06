@@ -1,11 +1,12 @@
 'use client';
-import { useState } from 'react';
+import { startTransition, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import logo from '@/assets/images/logo-white.png';
 import profileDefault from '@/assets/images/profile.png';
 import { useAuth } from '@/app/providers/AuthProvider';
+import { toast, ToastContainer } from 'react-toastify';
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -13,9 +14,17 @@ const Navbar = () => {
 
   const {
     state: { isLoggedIn, user },
+    dispatch,
   } = useAuth();
 
   const pathName = usePathname();
+  const router = useRouter();
+
+  const handleSignOut = () => {
+    dispatch({ type: 'LOGOUT' });
+    startTransition(() => router.replace('/login'));
+    toast.success('You have been signed out.');
+  };
 
   return (
     <nav className='bg-blue-700 border-b border-blue-500'>
@@ -190,6 +199,7 @@ const Navbar = () => {
                       role='menuitem'
                       tabIndex={-1}
                       id='user-menu-item-2'
+                      onClick={handleSignOut}
                     >
                       Sign Out
                     </button>
@@ -236,6 +246,7 @@ const Navbar = () => {
           </div>
         </div>
       )}
+      <ToastContainer position='top-right' />
     </nav>
   );
 };
