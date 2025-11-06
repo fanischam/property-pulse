@@ -12,7 +12,7 @@ export type AuthState = {
   status: number;
   message: string;
   errors?: AuthErrors;
-  fields: Record<string, string | undefined>;
+  fields?: Record<string, string | undefined>;
   pending?: boolean;
 };
 
