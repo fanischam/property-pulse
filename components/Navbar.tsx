@@ -23,6 +23,7 @@ const Navbar = () => {
   const handleSignOut = () => {
     dispatch({ type: 'LOGOUT' });
     startTransition(() => router.replace('/login'));
+    setIsProfileMenuOpen(false);
     toast.success('You have been signed out.');
   };
 
@@ -195,7 +196,7 @@ const Navbar = () => {
                       Saved Properties
                     </Link>
                     <button
-                      className='block px-4 py-2 text-sm text-gray-700'
+                      className='block px-4 py-2 text-sm text-gray-700 cursor-pointer'
                       role='menuitem'
                       tabIndex={-1}
                       id='user-menu-item-2'
