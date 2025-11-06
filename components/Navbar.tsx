@@ -144,14 +144,14 @@ const Navbar = () => {
                 </span>
               </Link>
               {/* <!-- Profile dropdown button --> */}
-              <div className='relative ml-3'>
-                <div className='text-white mr-3 hidden md:block'>
+              <div className='relative ml-6 flex-col'>
+                <div className='text-white hidden md:block pb-1 font-medium'>
                   Hi, {user?.name ?? 'User'}
                 </div>
                 <div>
                   <button
                     type='button'
-                    className='relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800'
+                    className='relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 m-auto'
                     id='user-menu-button'
                     aria-expanded='false'
                     aria-haspopup='true'
@@ -171,7 +171,7 @@ const Navbar = () => {
                 {isProfileMenuOpen && (
                   <div
                     id='user-menu'
-                    className='absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none'
+                    className='absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-md ring-1 ring-black ring-opacity-5 focus:outline-none'
                     role='menu'
                     aria-orientation='vertical'
                     aria-labelledby='user-menu-button'
