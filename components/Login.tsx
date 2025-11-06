@@ -46,7 +46,7 @@ const Login = () => {
         },
       });
     }
-  }, [state, dispatch]);
+  }, [state, router, dispatch]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     const formData = new FormData(e.currentTarget as HTMLFormElement);

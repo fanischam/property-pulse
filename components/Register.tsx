@@ -56,7 +56,7 @@ const Register = () => {
         },
       });
     }
-  }, [state, dispatch]);
+  }, [state, router, dispatch]);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     if (!isValid) {
