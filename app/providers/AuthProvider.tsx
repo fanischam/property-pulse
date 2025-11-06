@@ -1,3 +1,5 @@
+'use client';
+
 import { createContext, useContext, useMemo, useReducer } from 'react';
 import {
   AuthAction,
