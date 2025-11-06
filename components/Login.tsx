@@ -2,7 +2,9 @@
 import { loginUser } from '@/app/actions/auth';
 import { useLoginValidation } from '@/app/hooks/useLoginValidation';
 import { LoginFormState } from '@/app/lib/definitions';
-import { useActionState, useEffect } from 'react';
+import { useAuth } from '@/app/providers/AuthProvider';
+import { useRouter } from 'next/navigation';
+import { startTransition, useActionState, useEffect } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 
 const Login = () => {
@@ -14,18 +16,37 @@ const Login = () => {
   const { email, password, isValid, onEmailChange, onPasswordChange } =
     useLoginValidation();
 
+  const { dispatch } = useAuth();
+  const router = useRouter();
+
   useEffect(() => {
     if (!state) return;
 
     if (state.status === 200 && state.message) {
       toast.success(state.message);
+      if (state.user) {
+        dispatch({
+          type: 'LOGIN_SUCCESS',
+          payload: { user: state.user, message: state.message },
+        });
+      }
+      startTransition(() => router.replace('/'));
       return;
     }
     const msg = state.message;
     if (msg && state.status && state.status !== 200) {
       toast.error(msg);
+      dispatch({
+        type: 'AUTH_ERROR',
+        payload: {
+          message: msg,
+          status: state.status,
+          errors: state.errors,
+          fields: state.fields,
+        },
+      });
     }
-  }, [state]);
+  }, [state, dispatch]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     const formData = new FormData(e.currentTarget as HTMLFormElement);
@@ -35,6 +56,8 @@ const Login = () => {
     if (!email || !password) {
       e.preventDefault();
       toast.error('Please fill in all fields.');
+    } else {
+      dispatch({ type: 'START' });
     }
   };
 

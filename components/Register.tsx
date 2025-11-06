@@ -3,7 +3,9 @@
 import { registerUser } from '@/app/actions/auth';
 import { useRegisterValidation } from '@/app/hooks/useRegisterValidation';
 import { RegisterFormState } from '@/app/lib/definitions';
-import { FormEvent, useActionState, useEffect } from 'react';
+import { useAuth } from '@/app/providers/AuthProvider';
+import { useRouter } from 'next/navigation';
+import { FormEvent, startTransition, useActionState, useEffect } from 'react';
 import { FaCheckCircle, FaExclamationTriangle } from 'react-icons/fa';
 import { FaXmark } from 'react-icons/fa6';
 import { toast, ToastContainer } from 'react-toastify';
@@ -25,22 +27,43 @@ const Register = () => {
     onConfirmChange,
   } = useRegisterValidation();
 
+  const { dispatch } = useAuth();
+  const router = useRouter();
+
   useEffect(() => {
     if (!state) return;
     if (state.status === 201 && state.message) {
       toast.success(state.message);
+      if (state.user) {
+        dispatch({
+          type: 'REGISTER_SUCCESS',
+          payload: { user: state.user, message: state.message },
+        });
+      }
+      startTransition(() => router.replace('/'));
       return;
     }
     const msg = state.message;
     if (msg && state.status && state.status !== 201) {
       toast.error(msg);
+      dispatch({
+        type: 'AUTH_ERROR',
+        payload: {
+          status: state.status,
+          message: state.message,
+          errors: state.errors,
+          fields: state.fields ?? {},
+        },
+      });
     }
-  }, [state]);
+  }, [state, dispatch]);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     if (!isValid) {
       e.preventDefault();
       toast.error('Please fix password errors before submitting.');
+    } else {
+      dispatch({ type: 'START' });
     }
   };
 

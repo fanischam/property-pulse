@@ -5,11 +5,15 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import logo from '@/assets/images/logo-white.png';
 import profileDefault from '@/assets/images/profile.png';
+import { useAuth } from '@/app/providers/AuthProvider';
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const {
+    state: { isLoggedIn, user },
+  } = useAuth();
 
   const pathName = usePathname();
 
@@ -131,6 +135,9 @@ const Navbar = () => {
               </Link>
               {/* <!-- Profile dropdown button --> */}
               <div className='relative ml-3'>
+                <div className='text-white mr-3 hidden md:block'>
+                  Hi, {user?.name ?? 'User'}
+                </div>
                 <div>
                   <button
                     type='button'
