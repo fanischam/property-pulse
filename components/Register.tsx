@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import { FormEvent, startTransition, useActionState, useEffect } from 'react';
 import { FaCheckCircle, FaExclamationTriangle } from 'react-icons/fa';
 import { FaXmark } from 'react-icons/fa6';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 const Register = () => {
   const [state, action, pending] = useActionState<RegisterFormState, FormData>(
@@ -232,7 +232,6 @@ const Register = () => {
       >
         {pending ? 'Registering user...' : 'Register'}
       </button>
-      <ToastContainer position='top-right' />
     </form>
   );
 };

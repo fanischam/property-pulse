@@ -5,7 +5,7 @@ import { LoginFormState } from '@/app/lib/definitions';
 import { useAuth } from '@/app/providers/AuthProvider';
 import { useRouter } from 'next/navigation';
 import { startTransition, useActionState, useEffect } from 'react';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 const Login = () => {
   const [state, action, pending] = useActionState<LoginFormState, FormData>(
@@ -106,7 +106,6 @@ const Login = () => {
       >
         {pending ? 'Logging in...' : 'Login'}
       </button>
-      <ToastContainer position='top-right' />
     </form>
   );
 };

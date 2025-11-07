@@ -6,14 +6,14 @@ import { usePathname, useRouter } from 'next/navigation';
 import logo from '@/assets/images/logo-white.png';
 import profileDefault from '@/assets/images/profile.png';
 import { useAuth } from '@/app/providers/AuthProvider';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
 
   const {
-    state: { isLoggedIn, user },
+    state: { isLoggedIn },
     dispatch,
   } = useAuth();
 
@@ -144,17 +144,15 @@ const Navbar = () => {
                 </span>
               </Link>
               {/* <!-- Profile dropdown button --> */}
-              <div className='relative ml-6 flex-col'>
-                <div className='text-white hidden md:block pb-1 font-medium'>
-                  Hi, {user?.name ?? 'User'}
-                </div>
+              <div className='relative ml-6 '>
                 <div>
                   <button
                     type='button'
-                    className='relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 m-auto'
+                    className='relative flex rounded-full bg-gray-800 text-sm focus:outline-none cursor-pointer focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 m-auto'
                     id='user-menu-button'
                     aria-expanded='false'
                     aria-haspopup='true'
+                    onBlur={() => setIsProfileMenuOpen(false)}
                     onClick={() => setIsProfileMenuOpen((prev) => !prev)}
                   >
                     <span className='absolute -inset-1.5'></span>
@@ -247,7 +245,6 @@ const Navbar = () => {
           </div>
         </div>
       )}
-      <ToastContainer position='top-right' />
     </nav>
   );
 };
