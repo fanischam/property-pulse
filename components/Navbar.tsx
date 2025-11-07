@@ -88,14 +88,16 @@ const Navbar = () => {
                 >
                   Properties
                 </Link>
-                <Link
-                  href='/properties/add'
-                  className={`${
-                    pathName === '/properties/add' && 'bg-black'
-                  } text-white hover:bg-gray-900 hover:text-white rounded-md px-3 py-2`}
-                >
-                  Add Property
-                </Link>
+                {isLoggedIn && (
+                  <Link
+                    href='/properties/add'
+                    className={`${
+                      pathName === '/properties/add' && 'bg-black'
+                    } text-white hover:bg-gray-900 hover:text-white rounded-md px-3 py-2`}
+                  >
+                    Add Property
+                  </Link>
+                )}
               </div>
             </div>
           </div>
@@ -152,7 +154,6 @@ const Navbar = () => {
                     id='user-menu-button'
                     aria-expanded='false'
                     aria-haspopup='true'
-                    onBlur={() => setIsProfileMenuOpen(false)}
                     onClick={() => setIsProfileMenuOpen((prev) => !prev)}
                   >
                     <span className='absolute -inset-1.5'></span>
