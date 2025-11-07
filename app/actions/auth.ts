@@ -9,34 +9,8 @@ import {
 import connectDb from '@/config/database';
 import { z } from 'zod';
 import bcrypt from 'bcryptjs';
-import { cookies } from 'next/headers';
 import { type User } from '../lib/auth/auth-types';
-
-const createSessionToken = (userId: string) => {
-  return `session_token_for_${userId}_${Date.now()}`;
-};
-
-const setSessionCookie = async (token: string) => {
-  const cookieStore = await cookies();
-  cookieStore.set('session', token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    path: '/',
-    maxAge: 60 * 60 * 24 * 7, // 1 week
-  });
-};
-
-const clearSessionCookie = async () => {
-  const cookieStore = await cookies();
-  cookieStore.set('session', '', {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    path: '/',
-    maxAge: 0,
-  });
-};
+import { clearSessionCookie, setSessionCookie, signUserJwt } from '../lib/jwt';
 
 export const registerUser = async (
   _prevState: RegisterFormState,
@@ -107,8 +81,8 @@ export const registerUser = async (
       email: createdUser.email,
     };
 
-    const token = createSessionToken(user.id);
-    await setSessionCookie(token);
+    const token = await signUserJwt(user);
+    setSessionCookie(token);
 
     return { status: 201, message: 'User created successfully!', user };
   } catch (err) {
@@ -160,8 +134,8 @@ export const loginUser = async (
       email: userRecord.email,
     };
 
-    const token = createSessionToken(user.id);
-    await setSessionCookie(token);
+    const token = await signUserJwt(user);
+    setSessionCookie(token);
 
     return { status: 200, message: 'Logged in successfully!', user };
   } catch (err) {
