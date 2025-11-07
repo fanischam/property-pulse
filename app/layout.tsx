@@ -5,6 +5,7 @@ import '@/assets/styles/globals.css';
 import Footer from '@/components/Footer';
 import { cookies } from 'next/headers';
 import AuthProvider from './providers/AuthProvider';
+import Toaster from '@/components/Toaster';
 
 type RootLayoutProps = {
   children: ReactNode;
@@ -25,7 +26,7 @@ const RootLayout = async ({ children }: RootLayoutProps) => {
   const initialAuth = session
     ? {
         isLoggedIn: true,
-        user: { id: 'user_id', name: 'User Name', email: 'user@example.com' },
+        user: null,
       }
     : { isLoggedIn: false, user: null };
 
@@ -36,6 +37,7 @@ const RootLayout = async ({ children }: RootLayoutProps) => {
           <Navbar />
           <main>{children}</main>
           <Footer />
+          <Toaster />
         </AuthProvider>
       </body>
     </html>
