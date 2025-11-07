@@ -7,6 +7,7 @@ import logo from '@/assets/images/logo-white.png';
 import profileDefault from '@/assets/images/profile.png';
 import { useAuth } from '@/app/providers/AuthProvider';
 import { toast } from 'react-toastify';
+import { logout } from '@/app/actions/auth';
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -20,8 +21,9 @@ const Navbar = () => {
   const pathName = usePathname();
   const router = useRouter();
 
-  const handleSignOut = () => {
+  const handleSignOut = async () => {
     dispatch({ type: 'LOGOUT' });
+    await logout();
     startTransition(() => router.replace('/login'));
     setIsProfileMenuOpen(false);
     toast.success('You have been signed out.');
