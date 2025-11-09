@@ -1,11 +1,7 @@
 'use client';
 
 import { createContext, useContext, useMemo, useReducer } from 'react';
-import {
-  AuthAction,
-  AuthState,
-  initialAuthState,
-} from '../lib/auth/auth-types';
+import { AuthAction, AuthState, initialAuthState } from '../lib/auth/authTypes';
 
 type AuthProviderProps = {
   children: React.ReactNode;

@@ -1,7 +1,7 @@
 'use server';
 
 import { SignJWT, jwtVerify, JWTPayload } from 'jose';
-import { User } from './auth/auth-types';
+import { User } from './auth/authTypes';
 
 const secret = new TextEncoder().encode(process.env.JWT_SECRET ?? '');
 const ISSUER = process.env.JWT_ISSUER ?? 'app';

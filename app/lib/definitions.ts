@@ -1,5 +1,5 @@
 import * as z from 'zod';
-import { User } from './auth/auth-types';
+import { User } from './auth/authTypes';
 
 export const SignUpFormSchema = z
   .object({

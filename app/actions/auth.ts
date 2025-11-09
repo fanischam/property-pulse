@@ -9,7 +9,7 @@ import {
 import connectDb from '@/config/database';
 import { z } from 'zod';
 import bcrypt from 'bcryptjs';
-import { type User } from '../lib/auth/auth-types';
+import { type User } from '../lib/auth/authTypes';
 import { signUserJwt } from '../lib/jwt';
 import { cookies } from 'next/headers';
 
