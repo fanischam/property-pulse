@@ -10,7 +10,8 @@ import connectDb from '@/config/database';
 import { z } from 'zod';
 import bcrypt from 'bcryptjs';
 import { type User } from '../lib/auth/auth-types';
-import { clearSessionCookie, setSessionCookie, signUserJwt } from '../lib/jwt';
+import { signUserJwt } from '../lib/jwt';
+import { cookies } from 'next/headers';
 
 export const registerUser = async (
   _prevState: RegisterFormState,
@@ -82,7 +83,14 @@ export const registerUser = async (
     };
 
     const token = await signUserJwt(user);
-    setSessionCookie(token);
+    const store = await cookies();
+    store.set('session', token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 60 * 60 * 24 * 7,
+    });
 
     return { status: 201, message: 'User created successfully!', user };
   } catch (err) {
@@ -135,7 +143,14 @@ export const loginUser = async (
     };
 
     const token = await signUserJwt(user);
-    setSessionCookie(token);
+    const store = await cookies();
+    store.set('session', token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 60 * 60 * 24 * 7,
+    });
 
     return { status: 200, message: 'Logged in successfully!', user };
   } catch (err) {
@@ -149,6 +164,7 @@ export const loginUser = async (
 };
 
 export const logout = async () => {
-  await clearSessionCookie();
+  const store = await cookies();
+  store.delete('session');
   return { status: 200, message: 'Logged out successfully.' };
 };

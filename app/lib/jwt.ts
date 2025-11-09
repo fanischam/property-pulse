@@ -1,7 +1,6 @@
 'use server';
 
 import { SignJWT, jwtVerify, JWTPayload } from 'jose';
-import { cookies } from 'next/headers';
 import { User } from './auth/auth-types';
 
 const secret = new TextEncoder().encode(process.env.JWT_SECRET ?? '');
@@ -34,23 +33,4 @@ export async function verifyJwt(token: string): Promise<User | null> {
   } catch {
     return null;
   }
-}
-
-export async function setSessionCookie(
-  token: string,
-  maxAgeSec = 60 * 60 * 24 * 7
-) {
-  const cookieStore = await cookies();
-  cookieStore.set('session', token, {
-    httpOnly: true,
-    secure: true,
-    sameSite: 'lax',
-    path: '/',
-    maxAge: maxAgeSec,
-  });
-}
-
-export async function clearSessionCookie() {
-  const cookieStore = await cookies();
-  cookieStore.delete('session');
 }
