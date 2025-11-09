@@ -1,5 +1,6 @@
 import PropertyDetails from '@/components/PropertyDetails';
 import PropertyHeaderImage from '@/components/PropertyHeaderImage';
+import PropertyImages from '@/components/PropertyImages';
 import connectDb from '@/config/database';
 import Property from '@/models/Property';
 import { IProperty, RouteParams } from '@/types/types';
@@ -54,6 +55,7 @@ const PropertyPage = async ({ params }: RouteParams) => {
           </div>
         </div>
       </section>
+      <PropertyImages images={property.images} />
     </>
   );
 };
