@@ -3,7 +3,7 @@ import { verifyJwt } from './app/lib/jwt';
 
 const PROTECTED_ROUTES = ['/properties/add'];
 
-async function middleware(req: NextRequest) {
+async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const isProtected = PROTECTED_ROUTES.some((p) => pathname.startsWith(p));
   if (!isProtected) return NextResponse.next();
@@ -24,4 +24,4 @@ export const config = {
   matcher: ['/properties/add'],
 };
 
-export default middleware;
+export default proxy;
