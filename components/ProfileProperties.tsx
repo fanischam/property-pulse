@@ -2,6 +2,7 @@
 
 import { IProperty } from '@/types/types';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useState } from 'react';
 
 const ProfileProperties = ({
@@ -14,7 +15,7 @@ const ProfileProperties = ({
 
   return properties.map((prop) => (
     <div className='mb-10' key={prop._id}>
-      <a href='/property.html'>
+      <Link href={`/properties/${prop._id}`}>
         <Image
           className='h-32 w-full rounded-md object-cover'
           src={prop.images[0]}
@@ -22,7 +23,7 @@ const ProfileProperties = ({
           height={200}
           alt='Property 1'
         />
-      </a>
+      </Link>
       <div className='mt-2'>
         <p className='text-lg font-semibold'>{prop.name}</p>
         <p className='text-gray-600'>
