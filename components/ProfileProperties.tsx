@@ -1,9 +1,11 @@
 'use client';
 
+import deleteProperty from '@/app/actions/deleteProperty';
 import { IProperty } from '@/types/types';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 
 const ProfileProperties = ({
   properties: initialProperties,
@@ -12,6 +14,21 @@ const ProfileProperties = ({
 }) => {
   const [properties, setProperties] =
     useState<Array<IProperty>>(initialProperties);
+
+  const handleDelete = async (propertyId: string) => {
+    const confirm = window.confirm(
+      'Are you sure you want to delete this property?'
+    );
+    if (!confirm) return;
+
+    await deleteProperty(propertyId);
+    toast.success('Property deleted successfully');
+
+    const updatedProperties = properties.filter(
+      (prop) => prop._id !== propertyId
+    );
+    setProperties(updatedProperties);
+  };
 
   return properties.map((prop) => (
     <div className='mb-10' key={prop._id}>
@@ -41,6 +58,7 @@ const ProfileProperties = ({
         <button
           className='bg-red-500 text-white px-3 py-2 rounded-md hover:bg-red-600'
           type='button'
+          onClick={() => handleDelete(prop._id)}
         >
           Delete
         </button>
