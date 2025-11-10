@@ -14,7 +14,10 @@ const ProfilePage = async () => {
 
   const { id } = sessionUser;
 
-  const properties = await Property.find({ ownerId: id }).lean<IProperty[]>();
+  const rawProperties = await Property.find({ ownerId: id }).lean<
+    IProperty[]
+  >();
+  const properties = JSON.parse(JSON.stringify(rawProperties));
 
   return (
     <section className='bg-blue-50'>
