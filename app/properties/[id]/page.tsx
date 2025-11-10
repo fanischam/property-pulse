@@ -32,7 +32,11 @@ const PropertyPage = async ({ params }: RouteParams) => {
   const property = await Property.findById(id).lean<IProperty>();
 
   if (!property) {
-    return <section>No property found</section>;
+    return (
+      <section className='text-center text-2xl font-bold mt-10'>
+        No property found
+      </section>
+    );
   }
 
   return (
