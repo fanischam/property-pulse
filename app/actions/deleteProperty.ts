@@ -21,11 +21,6 @@ const deleteProperty = async (propertyId: string) => {
   if (!property) throw new Error('Property not found');
 
   if (property.owner._id.toString() !== userId) {
-    console.log(
-      `typeof ownerId: ${typeof property.owner
-        ._id}, typeof userId: ${typeof userId}`
-    );
-    console.log(`Prop owner: ${property.owner._id}, userId: ${userId}`);
     throw new Error('You should be the owner of this property to delete');
   }
 
