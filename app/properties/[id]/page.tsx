@@ -33,7 +33,7 @@ const PropertyPage = async ({ params }: RouteParams) => {
 
   if (!property) {
     return (
-      <section className='text-center text-2xl font-bold mt-10'>
+      <section className='text-center text-2xl font-bold m-10'>
         No property found
       </section>
     );
