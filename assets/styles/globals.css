@@ -1,1 +1,5 @@
 @import 'tailwindcss';
+
+@utility grid-cols-70-30 {
+  grid-template-columns: 70% 30%;
+}
